@@ -2,11 +2,13 @@ package com.custome.service;
 
 import org.springframework.stereotype.Service;
 
+import com.custome.dto.UserDto;
+
 @Service
 public interface UserService {
 
-  Object userlogin(String email, String password)throws Exception  ;
+  String userlogin(UserDto usetDto)throws Exception  ;
 
-  Object forgotpassword();
+  Object forgotpassword(String email);
 
 }
