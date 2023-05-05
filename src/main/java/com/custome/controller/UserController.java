@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,11 @@ public class UserController {
 		return tokenString;
 	}
 	@PostMapping("/forgot-password")
-	public Object forgotpassword(@PathVariable String email) {
-		return userService.forgotpassword(email);
+	public Object forgotpassword(@RequestBody UserDto userDto) {
+		return userService.forgotpassword(userDto);
+	}
+	@PutMapping("/changepassword/{id}")
+	public Object otpcheckingfunction(@PathVariable int id,@RequestBody UserDto userDto){
+		return userService.otpcheckandchangepassoword(id, userDto);
 	}
 }

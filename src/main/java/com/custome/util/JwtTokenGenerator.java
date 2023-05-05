@@ -2,6 +2,7 @@ package com.custome.util;
 
 import java.io.Serializable;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,22 +36,8 @@ public class JwtTokenGenerator implements Serializable{
 	  @Autowired
       private  UserRepository userRepository;
 	  
-	  @Value("${jwt.secret}")
-	  private static String secret;
+	    private  String secret="manogarsrlm";
 	  
-	//  private static final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-	  //retrieve username from jwt token
-	  public static String getUsernameFromJwt(String token) {
-
-	    Claims claims = Jwts.parser()
-	      .setSigningKey(secret)
-	      .parseClaimsJws(token)
-	      .getBody();
-
-	    return claims.getSubject();
-	  }
-
 	  //retrieve expiration date from jwt token
 	  public Date getExpirationDateFromToken(String token) {
 	    return getClaimFromToken(token, Claims::getExpiration);
@@ -73,27 +60,15 @@ public class JwtTokenGenerator implements Serializable{
 	  }
 
 	  //generate token for user
-	  public String generateToken(String  email) {
+	  public String generateToken(String  email) {		 
 	    Map<String, Object> claims = new HashMap<>();
 	    return doGenerateToken(claims, email);
 	  }
 	  
-	  
-	  public static String generateJwt(String subject, Map<String, String> claims) {
-		    JwtBuilder builder = Jwts.builder()
-		            .setIssuer("welcome")
-		            .setSubject(subject)
-		            .signWith(SignatureAlgorithm.HS256, secret)
-		            .setIssuedAt(new Date());
-		    claims.forEach(builder::claim);
-		    return builder.compact();
-		}
-
 	  private String doGenerateToken(Map<String, Object> claims, String subject) {
-
 	    return Jwts.builder().setClaims(claims).setSubject(String.valueOf(subject)).setIssuedAt(new Date(System.currentTimeMillis()))
 	      .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-	      .signWith(SignatureAlgorithm.HS512, secret).compact();
+	      .signWith(SignatureAlgorithm.HS512, "manogar").compact();
 	  }
 
 	  //validate token

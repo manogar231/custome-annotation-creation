@@ -9,6 +9,8 @@ public interface UserService {
 
   String userlogin(UserDto usetDto)throws Exception  ;
 
-  Object forgotpassword(String email);
+  Object forgotpassword(UserDto userDto);
+
+  Object otpcheckandchangepassoword(int id, UserDto userDto);
 
 }

@@ -2,15 +2,15 @@ package com.custome.dto;
 
 public class UserDto {
 
-	private String email;
+	private String mail;
 	private String resetOtp;
 	private String password;
 	
-	public String getEmail() {
-		return email;
+	public String getmail() {
+		return mail;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setmail(String mail) {
+		this.mail = mail;
 	}
 	public String getResetOtp() {
 		return resetOtp;

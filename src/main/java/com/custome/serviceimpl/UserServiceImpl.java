@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	private ModelMapper modelMapper;
 
 	public String userlogin(UserDto userDto) throws Exception {
-		Optional<User> user = userRepositroy.findUserBymail(userDto.getEmail());
+		Optional<User> user = userRepositroy.findUserBymail(userDto.getmail());
 	   User user1=	user.get();
 		if (user.isEmpty()) {
 			throw new Exception("User Not Found! please Sign Up");
@@ -51,20 +51,38 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-	public Object forgotpassword(String email) {
-		User user = userRepositroy.findUserBymail(email).get();
+	public Object forgotpassword(UserDto userDto) {
+		User user = userRepositroy.findUserBymail(userDto.getmail()).get();
 		if (user==null) {
 			return HttpStatus.UNAUTHORIZED;
 		}
 		String	resetOtp=otpGenerator.generateOTP();		
     	user.setResetOtp(resetOtp);
 		userRepositroy.save(user);				
-        UserDto userDto	=modelMapper.map(user, UserDto.class);
+        UserDto userDto1=modelMapper.map(user, UserDto.class);
 		String url = "http://localhost:8083/sendmail";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
+		HttpEntity<UserDto> request = new HttpEntity<>(userDto1, headers);
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 		return "OTP Send Success";
+	}
+	
+	public Object otpcheckandchangepassoword(int id, UserDto userDto) {		
+       User user=userRepositroy.findById(id).get();		
+       if(user==null) {
+    	   return HttpStatus.NOT_FOUND;
+       }
+	   if(user.getResetOtp().equals(userDto.getResetOtp()) ){
+		   if(user.getPassword().equals(userDto.getPassword())) {
+			   return "Password Already Exits!Try Another One";
+		   }else {
+			user.setPassword(userDto.getPassword()); 
+			userRepositroy.save(user);
+		   }		   
+	   }else {
+		   return "OTP Not Correct";
+	   }
+		return "Password Changed Successfully !!";
 	}
 }
